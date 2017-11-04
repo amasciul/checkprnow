@@ -1,6 +1,8 @@
 package checkprnow
 
-data class Event(val type: String, val action: String) {
+import com.google.gson.annotations.SerializedName
+
+data class Event(private val type: String, private val action: String, @SerializedName("pull_request") val pullRequest: PullRequest?) {
     companion object {
         val TYPE_PULL_REQUEST = "PullRequest"
         val ACTION_OPENED = "opened"
@@ -11,3 +13,6 @@ data class Event(val type: String, val action: String) {
     }
 }
 
+data class PullRequest(val repo: Repo)
+
+data class Repo(val name: String)

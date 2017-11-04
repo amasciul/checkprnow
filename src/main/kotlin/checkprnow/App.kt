@@ -29,19 +29,17 @@ fun Application.main() {
     }
 
     routing {
-        get("/event") {
-            call.respond(HttpStatusCode.MethodNotAllowed, "Use POST method")
-        }
         post("/event") {
             val event: Event = call.receive()
             println("Event received: $event")
             if (event.isOpenedPr()) {
-                checkOpenedPrCount()
+                onPrOpened(event.pullRequest!!)
             }
         }
     }
 }
 
-fun checkOpenedPrCount() {
+fun onPrOpened(pullRequest: PullRequest) {
+    println("New PR opened on ${pullRequest.repo.name}")
     println("Checking opened PR count...")
 }
