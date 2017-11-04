@@ -1,7 +1,13 @@
 package checkprnow
 
-import com.google.gson.annotations.SerializedName
+data class Event(val type: String, val action: String) {
+    companion object {
+        val TYPE_PULL_REQUEST = "PullRequest"
+        val ACTION_OPENED = "opened"
+    }
 
-data class Event (@SerializedName("pull_request") val pullRequest: PullRequest)
+    fun isOpenedPr(): Boolean {
+        return type == TYPE_PULL_REQUEST && action == ACTION_OPENED
+    }
+}
 
-data class PullRequest(val number: Int)
