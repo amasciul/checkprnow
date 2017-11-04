@@ -15,4 +15,6 @@ data class Event(private val type: String, private val action: String, @Serializ
 
 data class PullRequest(val repo: Repo)
 
-data class Repo(val name: String)
+data class Repo(val name: String, val owner: Owner)
+
+data class Owner(val login: String)

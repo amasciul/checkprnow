@@ -1,5 +1,10 @@
 package checkprnow
 
+import com.github.kittinunf.fuel.httpGet
+import com.github.kittinunf.result.Result
+import com.github.kittinunf.result.getAs
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -42,4 +47,20 @@ fun Application.main() {
 fun onPrOpened(pullRequest: PullRequest) {
     println("New PR opened on ${pullRequest.repo.name}")
     println("Checking opened PR count...")
+
+    "http://api.github.com/repos/${pullRequest.repo.owner.login}/${pullRequest.repo.name}/pulls"
+            .httpGet()
+            .responseString { _, _, result ->
+                println(result.get())
+
+                when (result) {
+                    is Result.Failure -> {
+                        println("Error: ${result.error}")
+                    }
+                    is Result.Success -> {
+                        val prs : List<PullRequest> = Gson().fromJson(result.get(), object : TypeToken<List<PullRequest>>(){}.getType())
+                        println("${pullRequest.repo.name} has ${prs.size} PRs!")
+                    }
+                }
+            }
 }
