@@ -58,9 +58,12 @@ fun onPrOpened(pullRequest: PullRequest) {
                         println("Error: ${result.error}")
                     }
                     is Result.Success -> {
-                        val prs : List<PullRequest> = Gson().fromJson(result.get(), object : TypeToken<List<PullRequest>>(){}.getType())
+                        val prs = parsePrs(result.get())
                         println("${pullRequest.repo.name} has ${prs.size} PRs!")
                     }
                 }
             }
 }
+
+fun parsePrs(json: String): List<PullRequest>
+        = Gson().fromJson(json, object : TypeToken<List<PullRequest>>() {}.getType())
